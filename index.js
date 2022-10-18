@@ -6,13 +6,13 @@ try {
     const pullRequestBranch = core.getInput('pull-request-branch');
     const ghToken = core.getInput('gh-token');
     if(!defaultBranch.length) {
-        core.error('Default Branch invalid')
+        core.setFailed('Default Branch invalid')
     }
     if(!pullRequestBranch.length) {
-        core.error('Pull Request Branch invalid')
+        core.setFailed('Pull Request Branch invalid')
     }
     if(!ghToken.length) {
-        core.error('Token invalid')
+        core.setFailed('Token invalid')
     }
     const octokit = github.getOctokit(ghToken)
     
