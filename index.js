@@ -109,6 +109,8 @@ async function run(){
                 }))
 
             }
+        }else{
+            core.setFailed('Event of action not accepted')
         }
     } catch (error) {
       core.setFailed(error.message);
