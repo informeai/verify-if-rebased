@@ -9707,6 +9707,9 @@ try {
         console.log(`Pull Request Branch - ${pullRequestBranch}`);
         console.log(`Token - ${ghToken}`);
         const octokit = github.getOctokit(ghToken)
+        const headCommit = octokit.rest.git.getCommit({})
+        console.log('headCommit: ',headCommit)
+        
 
     }
 } catch (error) {
