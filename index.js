@@ -71,53 +71,15 @@ async function run(){
         if(eventName == 'pull_request' && !reactive){
             console.log('Single mode active')
             await verifyInputs(core,defaultBranch,pullRequestBranch,ghToken)
-            // if(!defaultBranch.length) {
-            //     core.setFailed('Default Branch invalid')
-            // }
-            // if(!pullRequestBranch.length) {
-            //     core.setFailed('Pull Request Branch invalid')
-            // }
-            // if(!ghToken.length) {
-            //     core.setFailed('Token is required')
-            // }
-            // console.log('Get Head Commit')
-            // const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
-            //     owner: github.context.repo.owner,
-            //     repo: github.context.repo.repo
-            // })
-            // const headCommit = defaultBranchCommit.data.sha
             const headCommit = await getHeadCommit(octokit,github,defaultBranch)
-            // console.log('Get Commits from PR')
-            // const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${pullRequestBranch}&per_page=100`,{
-            //     owner: github.context.repo.owner,
-            //     repo: github.context.repo.repo
-            // })
-
-            // const allCommits = prCommits.data.map((c)=> c.sha)
             const allCommits = await getPrCommits(octokit,pullRequestBranch)
-
-            // const pr = github.context.payload.pull_request.number
-            // if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
             const pr = await setPrNumberOutput(github,core)
             await createLabels(command)
             await executeVerify(core,command,allCommits,headCommit,pr)
-            // console.log('Create labels if not exist')
-            // await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
-            // await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
-            
-            // console.log('Execute verify in PR and set label')
-            // if (allCommits.includes(headCommit)){
-            //     await command.exec('gh',['pr','edit',`${pr}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
-            //     core.setOutput('rebased',true)
-            // }else{
-            //     await command.exec('gh',['pr','edit',`${pr}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
-            //     core.setOutput('rebased',false)
-            // }
-    
         }
-        else if(eventName == 'push'){
+        else if(eventName == 'push' && reactive){
             const ref = github.context.ref
-            if(reactive && ref.includes(defaultBranch)){
+            if(ref.includes(defaultBranch)){
                 console.log('Reactive mode active')
                 if(!defaultBranch.length) {
                     core.setFailed('Default Branch invalid')
