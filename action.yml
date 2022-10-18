@@ -21,4 +21,4 @@ outputs:
     description: 'return if pr is rebased with default branch - (true/false)'
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
