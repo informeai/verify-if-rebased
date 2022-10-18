@@ -10985,17 +10985,17 @@ async function run(){
         const defaultBranch = core.getInput('default-branch');
         const pullRequestBranch = core.getInput('pull-request-branch');
         const ghToken = core.getInput('gh-token');
-        if(!defaultBranch.length) {
-            core.setFailed('Default Branch invalid')
-        }
-        if(!pullRequestBranch.length) {
-            core.setFailed('Pull Request Branch invalid')
-        }
-        if(!ghToken.length) {
-            core.setFailed('Token is required')
-        }
         const octokit = github.getOctokit(ghToken)
         if(eventName == 'pull_request'){
+            if(!defaultBranch.length) {
+                core.setFailed('Default Branch invalid')
+            }
+            if(!pullRequestBranch.length) {
+                core.setFailed('Pull Request Branch invalid')
+            }
+            if(!ghToken.length) {
+                core.setFailed('Token is required')
+            }
             // console.log(`Default Branch - ${defaultBranch}`);
             // console.log(`Pull Request Branch - ${pullRequestBranch}`);
             // console.log(`Token - ${ghToken}`);
@@ -11035,6 +11035,9 @@ async function run(){
             const reactive = core.getInput('reactive');
             console.log('reactive: ',reactive)
             if(reactive){
+                if(!defaultBranch.length) {
+                    core.setFailed('Default Branch invalid')
+                }
                 const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo
