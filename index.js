@@ -90,6 +90,7 @@ async function run(){
             await createLabels(command)
             console.log('Execute verify in PR and set label')
             await executeVerify(core,command,allCommits,headCommit,pr)
+            return
         }
         else if(eventName == 'push' && reactive){
             const ref = github.context.ref
@@ -109,6 +110,7 @@ async function run(){
                 }))
 
             }
+            return
         }else{
             core.setFailed('Event of action not accepted')
         }
