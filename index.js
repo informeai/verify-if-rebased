@@ -15,12 +15,14 @@ try {
     if(!ghToken.length) {
         core.setFailed('Token is required')
     }
-    const octokit = github.getOctokit(ghToken)
-    
-    console.log(`Default Branch - ${defaultBranch}`);
-    console.log(`Pull Request Branch - ${pullRequestBranch}`);
-    console.log(`Token - ${ghToken}`);
     console.log('event: ', eventName)
+    if(eventName == 'pull_request'){
+        console.log(`Default Branch - ${defaultBranch}`);
+        console.log(`Pull Request Branch - ${pullRequestBranch}`);
+        console.log(`Token - ${ghToken}`);
+        const octokit = github.getOctokit(ghToken)
+
+    }
 } catch (error) {
   core.setFailed(error.message);
 }
