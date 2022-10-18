@@ -26,7 +26,7 @@ async function run(){
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo
               })
-            console.log('headCommit: ',headCommit.data)
+            console.log('headCommit: ',headCommit.data.sha)
             
     
         }
