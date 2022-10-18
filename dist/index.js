@@ -9719,7 +9719,7 @@ async function run(){
                 repo: github.context.repo.repo
             })
 
-            console.log('prCommits: ',prCommits.data)
+            console.log('prCommits: ',prCommits.data.map((c)=> c.sha))
             
     
         }
