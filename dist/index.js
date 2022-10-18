@@ -11099,7 +11099,7 @@ async function run(){
                 // await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
                 // await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
                 await createLabels(command)
-                const pr = github.context.payload.pull_request.number
+                // const pr = github.context.payload.pull_request.number
                 console.log('Execute verify if rebased in all prs and set label')
                 await Promise.allSettled(allPrsBranches.map(async(branch)=>{
 
@@ -11114,7 +11114,7 @@ async function run(){
                     //     await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
                     // }
                     const allCommits = await getPrCommits(octokit,branch.ref)
-                    await executeVerify(core,command,allCommits,headCommit,pr)
+                    await executeVerify(core,command,allCommits,headCommit,branch.number)
                     
                 }))
 
