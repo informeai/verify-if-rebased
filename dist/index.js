@@ -11052,7 +11052,7 @@ async function run(){
                 console.log('Create labels if not exist')
                 await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
                 await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
-                console.log('Execute verify if rebased in all prs')
+                console.log('Execute verify if rebased in all prs and set label')
                 await Promise.allSettled(allPrsBranches.map(async(branch)=>{
                     const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${branch.ref}&per_page=100`,{
                         owner: github.context.repo.owner,
