@@ -136,7 +136,7 @@ async function run(){
                     // }else{
                     //     await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
                     // }
-                    const allCommits = await getPrCommits(octokit,branch)
+                    const allCommits = await getPrCommits(octokit,branch.ref)
                     await executeVerify(core,command,allCommits,headCommit,pr)
                     
                 }))
