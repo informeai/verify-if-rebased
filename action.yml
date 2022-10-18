@@ -1,6 +1,8 @@
 name: 'Verify if Rebased'
 description: 'Action for verify if rebased PR, and set label (is-rebased or not-rebased)'
-icon: arrow-up-circle
+branding:
+  icon: 'arrow-up-circle'
+  color: 'green'
 inputs:
   default-branch:
     description: 'Default branch of repository'
