@@ -24,10 +24,10 @@ async function run(){
             const octokit = github.getOctokit(ghToken)
             const repository = github.context.repo
             console.log('repository: ',repository)
-            const headCommit = await octokit.rest.git.getCommit({
+            const headCommit = await octokit.request('GET /repos/{owner}/{repo}/commits', {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo
-            })
+              })
             console.log('headCommit: ',headCommit)
             
     
