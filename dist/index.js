@@ -10992,7 +10992,7 @@ async function verifyInputs(core,defaultBranch, pullRequestBranch, ghToken){
     }
 }
 
-async function getHeadCommit(github,defaultBranch){
+async function getHeadCommit(octokit,github,defaultBranch){
     console.log('Get Head Commit')
     const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
         owner: github.context.repo.owner,
@@ -11001,7 +11001,7 @@ async function getHeadCommit(github,defaultBranch){
     return defaultBranchCommit.data.sha
 }
 
-async function getPrCommits(pullRequestBranch){
+async function getPrCommits(octokit,pullRequestBranch){
     console.log('Get Commits from PR')
     const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${pullRequestBranch}&per_page=100`,{
         owner: github.context.repo.owner,
@@ -11062,7 +11062,7 @@ async function run(){
             //     repo: github.context.repo.repo
             // })
             // const headCommit = defaultBranchCommit.data.sha
-            const headCommit = await getHeadCommit(github,defaultBranch)
+            const headCommit = await getHeadCommit(octokit,github,defaultBranch)
             // console.log('Get Commits from PR')
             // const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${pullRequestBranch}&per_page=100`,{
             //     owner: github.context.repo.owner,
@@ -11070,7 +11070,7 @@ async function run(){
             // })
 
             // const allCommits = prCommits.data.map((c)=> c.sha)
-            const allCommits = await getPrCommits(pullRequestBranch)
+            const allCommits = await getPrCommits(octokit,pullRequestBranch)
 
             // const pr = github.context.payload.pull_request.number
             // if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
