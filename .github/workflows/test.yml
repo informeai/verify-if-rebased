@@ -2,6 +2,8 @@ name: test-of-action
 
 on:
   push:
+    branches:
+      - main
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -10,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: verify if rebased
-        uses: informeai/verify-if-rebased
+        uses: informeai/verify-if-rebased@v1
         with:
           gh-token: ${{ env.GH_TOKEN }} 
