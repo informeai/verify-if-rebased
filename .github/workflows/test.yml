@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: verify if rebased
-        uses: informeai/verify-if-rebased@v1
+        uses: ./
         with:
           gh-token: ${{ env.GH_TOKEN }} 
