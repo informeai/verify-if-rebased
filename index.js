@@ -22,13 +22,11 @@ async function run(){
             console.log(`Pull Request Branch - ${pullRequestBranch}`);
             console.log(`Token - ${ghToken}`);
             const octokit = github.getOctokit(ghToken)
-            const repository = github.context.repo
-            console.log('repository: ',repository)
-            const headCommit = await octokit.request('GET /repos/{owner}/{repo}/commits', {
+            const headCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo
               })
-            console.log('headCommit: ',headCommit)
+            console.log('headCommit: ',headCommit.data)
             
     
         }
