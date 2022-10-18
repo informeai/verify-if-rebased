@@ -20,5 +20,4 @@ Action for verify if PR is rebased, and set labels to pr - (is-rebased/not-rebas
     # React of push in default branch
     # param default: false
     reactive: ''
-
 ```
