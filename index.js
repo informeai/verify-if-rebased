@@ -25,6 +25,7 @@ async function run(){
             const repository = github.context.repo
             console.log('repository: ',repository)
             const headCommit = await octokit.rest.git.getCommit({
+                owner: github.context.repo.owner,
                 repo: github.context.repo.repo
             })
             console.log('headCommit: ',headCommit)
