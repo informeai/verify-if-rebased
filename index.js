@@ -59,7 +59,8 @@ async function run(){
             console.log('reactive: ',reactive)
             const ref = github.context.ref
             console.log('ref: ',ref)
-            if(reactive){
+            console.log('ref includes default branch: ', ref.includes(defaultBranch))
+            if(reactive && ref.includes(defaultBranch)){
                 if(!defaultBranch.length) {
                     core.setFailed('Default Branch invalid')
                 }
