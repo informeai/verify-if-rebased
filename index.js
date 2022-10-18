@@ -35,6 +35,20 @@ async function getPrCommits(octokit,pullRequestBranch){
     return prCommits.data.map((c)=> c.sha)
 }
 
+async function getAllPrs(octokit,github){
+    console.log('Get Prs from repo')
+    const resultPRS = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo
+    })
+    return resultPRS.data.map((p) =>{
+        return {
+            ref: p.head.ref,
+            number: p.number
+        }
+    })
+}
+
 async function createLabels(command){
     console.log('Create labels if not exist')
     await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
@@ -43,7 +57,6 @@ async function createLabels(command){
 }
 
 async function executeVerify(core,command,allCommits,headCommit,pr){
-    console.log('Execute verify in PR and set label')
     if (allCommits.includes(headCommit)){
         await command.exec('gh',['pr','edit',`${pr}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
         core.setOutput('rebased',true)
@@ -75,6 +88,7 @@ async function run(){
             const allCommits = await getPrCommits(octokit,pullRequestBranch)
             const pr = await setPrNumberOutput(github,core)
             await createLabels(command)
+            console.log('Execute verify in PR and set label')
             await executeVerify(core,command,allCommits,headCommit,pr)
         }
         else if(eventName == 'push' && reactive){
@@ -84,38 +98,46 @@ async function run(){
                 if(!defaultBranch.length) {
                     core.setFailed('Default Branch invalid')
                 }
-                console.log('Get Head Commit')
-                const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
-                    owner: github.context.repo.owner,
-                    repo: github.context.repo.repo
-                })
-                const headCommit = defaultBranchCommit.data.sha
-                console.log('Get Prs from repo')
-                const resultPRS = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
-                    owner: github.context.repo.owner,
-                    repo: github.context.repo.repo
-                })
-                const allPrsBranches = resultPRS.data.map((p) =>{
-                    return {
-                        ref: p.head.ref,
-                        number: p.number
-                    }
-                })
-                console.log('Create labels if not exist')
-                await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
-                await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
+                // console.log('Get Head Commit')
+                // const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
+                //     owner: github.context.repo.owner,
+                //     repo: github.context.repo.repo
+                // })
+                // const headCommit = defaultBranchCommit.data.sha
+                const headCommit = await getHeadCommit(octokit,github,defaultBranch)
+                // console.log('Get Prs from repo')
+                // const resultPRS = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
+                //     owner: github.context.repo.owner,
+                //     repo: github.context.repo.repo
+                // })
+                // const allPrsBranches = resultPRS.data.map((p) =>{
+                //     return {
+                //         ref: p.head.ref,
+                //         number: p.number
+                //     }
+                // })
+                const allPrsBranches = await getAllPrs(octokit,github)
+
+                // console.log('Create labels if not exist')
+                // await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
+                // await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
+                await createLabels(command)
+                const pr = github.context.payload.pull_request.number
                 console.log('Execute verify if rebased in all prs and set label')
                 await Promise.allSettled(allPrsBranches.map(async(branch)=>{
-                    const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${branch.ref}&per_page=100`,{
-                        owner: github.context.repo.owner,
-                        repo: github.context.repo.repo
-                    })
-                    const allCommits = prCommits.data.map((c)=> c.sha)
-                    if (allCommits.includes(headCommit)){
-                        await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
-                    }else{
-                        await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
-                    }
+
+                    // const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${branch.ref}&per_page=100`,{
+                    //     owner: github.context.repo.owner,
+                    //     repo: github.context.repo.repo
+                    // })
+                    // const allCommits = prCommits.data.map((c)=> c.sha)
+                    // if (allCommits.includes(headCommit)){
+                    //     await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
+                    // }else{
+                    //     await command.exec('gh',['pr','edit',`${branch.number}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
+                    // }
+                    const allCommits = await getPrCommits(octokit,branch)
+                    await executeVerify(core,command,allCommits,headCommit,pr)
                     
                 }))
 

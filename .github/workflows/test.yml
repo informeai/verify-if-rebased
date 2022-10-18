@@ -22,7 +22,7 @@ jobs:
         uses: ./
         with:
           gh-token: ${{ env.GH_TOKEN }}
-          reactive: false
+          reactive: true
       - name: pr number
         run: echo ${{ steps.verify.outputs.pr-number}}
       - name: is rebased
