@@ -11058,7 +11058,7 @@ async function run(){
         const ghToken = core.getInput('gh-token');
         const reactive = core.getBooleanInput('reactive');
         const octokit = github.getOctokit(ghToken)
-        if(eventName == 'pull_request' && !reactive){
+        if(eventName == 'pull_request'){
             console.log('Single mode active')
             await verifyInputs(core,defaultBranch,pullRequestBranch,ghToken)
             const headCommit = await getHeadCommit(octokit,github,defaultBranch)
