@@ -27,6 +27,13 @@ async function run(){
                 repo: github.context.repo.repo
               })
             console.log('headCommit: ',headCommit.data.sha)
+
+            const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits/${pullRequestBranch}`,{
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo
+            })
+
+            console.log('prCommits: ',prCommits.data)
             
     
         }
