@@ -20,7 +20,7 @@ async function run(){
             }
             console.log(`Default Branch - ${defaultBranch}`);
             console.log(`Pull Request Branch - ${pullRequestBranch}`);
-            console.log(`Token - ${ghToken}`);
+            // console.log(`Token - ${ghToken}`);
             const octokit = github.getOctokit(ghToken)
             const defaultBranchCommit = await octokit.request(`GET /repos/{owner}/{repo}/commits/${defaultBranch}`, {
                 owner: github.context.repo.owner,
@@ -33,8 +33,10 @@ async function run(){
                 repo: github.context.repo.repo
             })
 
-            console.log('prCommits: ',prCommits.data.map((c)=> c.sha))
             const allCommits = prCommits.data.map((c)=> c.sha)
+            console.log('allCommits: ', allCommits)
+            const pr = github.context.payload.pull_request.number
+            console.log('pr number: ',pr)
             if (allCommits.includes(headCommit)){
                 console.log(true)
             }else{
