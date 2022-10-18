@@ -67,7 +67,7 @@ async function run(){
                 })
                 const headCommit = defaultBranchCommit.data.sha
                 console.log('headCommit: ', headCommit)
-                const allPRs = await octokit.rest.pulls.get({
+                const allPRs = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo
                 })
