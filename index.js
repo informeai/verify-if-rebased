@@ -71,11 +71,25 @@ async function run(){
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo
                 })
-                console.log('allPRs: ',resultPRS.data)
-                // const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${pullRequestBranch}&per_page=100`,{
-                //     owner: github.context.repo.owner,
-                //     repo: github.context.repo.repo
-                // })
+                const allPrsBranches = resultPRS.data.map((p) => p.head.ref)
+                console.log('allPrsBranches: ',allPrsBranches)
+
+                await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
+                await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
+
+                await Promise.allSettled(allPrsBranches.map(async(branch)=>{
+                    const prCommits = await octokit.request(`GET /repos/{owner}/{repo}/commits?sha=${branch}&per_page=100`,{
+                        owner: github.context.repo.owner,
+                        repo: github.context.repo.repo
+                    })
+                    const allCommits = prCommits.data.map((c)=> c.sha)
+                    if (allCommits.includes(headCommit)){
+                        await command.exec('gh',['pr','edit',`${pr}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
+                    }else{
+                        await command.exec('gh',['pr','edit',`${pr}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
+                    }
+                    
+                }))
 
             }
         }
