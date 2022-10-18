@@ -11,8 +11,7 @@ inputs:
     default: ${{ github.event.pull_request.head.ref }}
   gh-token:
     description: 'Token with credentials for repository'
-    required: false
-    default: ${{ github.token }}
+    required: true
   
 
 outputs:
