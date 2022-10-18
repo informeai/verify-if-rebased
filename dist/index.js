@@ -11089,7 +11089,7 @@ async function run(){
             }
             return
         }else{
-            core.setFailed('Event of action not accepted')
+            core.warning('Event of action not accepted')
         }
     } catch (error) {
       core.setFailed(error.message);
