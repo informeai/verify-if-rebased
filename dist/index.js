@@ -11013,16 +11013,17 @@ async function run(){
             const allCommits = prCommits.data.map((c)=> c.sha)
             console.log('allCommits: ', allCommits)
             const pr = github.context.payload.pull_request.number
+            if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
             console.log('pr number: ',pr)
             await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
             await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
-            // gh label create is-rebased --description "branch actual is rebased with default branch" --color 0E8A16 -f
-            // gh label create not-rebased --description "branch actual is not rebased with default branch" --color B60205 -f
 
             if (allCommits.includes(headCommit)){
+                core.setOutput('rebased',true)
                 console.log(true)
             }else{
-                console.log(false)
+                core.setOutput('rebased',false)
+                console.log(true)
             }
     
         }
