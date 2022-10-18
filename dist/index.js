@@ -9720,7 +9720,12 @@ async function run(){
             })
 
             console.log('prCommits: ',prCommits.data.map((c)=> c.sha))
-            
+            const allCommits = prCommits.data.map((c)=> c.sha)
+            if (allCommits.includes(headCommit)){
+                console.log(true)
+            }else{
+                console.log(false)
+            }
     
         }
     } catch (error) {
