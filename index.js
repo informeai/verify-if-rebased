@@ -7,8 +7,9 @@ async function run(){
         const defaultBranch = core.getInput('default-branch');
         const pullRequestBranch = core.getInput('pull-request-branch');
         const ghToken = core.getInput('gh-token');
+        const reactive = core.getBooleanInput('reactive');
         const octokit = github.getOctokit(ghToken)
-        if(eventName == 'pull_request'){
+        if(eventName == 'pull_request' && !reactive){
             console.log('Single mode active')
             if(!defaultBranch.length) {
                 core.setFailed('Default Branch invalid')
@@ -48,7 +49,6 @@ async function run(){
     
         }
         else if(eventName == 'push'){
-            const reactive = core.getBooleanInput('reactive');
             const ref = github.context.ref
             if(reactive && ref.includes(defaultBranch)){
                 console.log('Reactive mode active')
