@@ -9691,13 +9691,12 @@ try {
     const defaultBranch = core.getInput('default-branch');
     const pullRequestBranch = core.getInput('pull-request-branch');
     const ghToken = core.getInput('gh-token');
-    console.log(`Default Branch - ${defaultBranch}!`);
-    console.log(`Pull Request Branch - ${pullRequestBranch}!`);
-    console.log(`Token - ${ghToken}!`);
-    // core.setOutput("time", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    // const payload = JSON.stringify(github.context.payload, undefined, 2)
-    // console.log(`The event payload: ${payload}`);
+    if(!defaultBranch.length) core.setFailed('Default Branch invalid')
+    if(!pullRequestBranch.length) core.setFailed('Pull Request Branch invalid')
+    if(!ghToken.length) core.setFailed('Token invalid')
+    console.log(`Default Branch - ${defaultBranch}`);
+    console.log(`Pull Request Branch - ${pullRequestBranch}`);
+    console.log(`Token - ${ghToken}`);
 } catch (error) {
   core.setFailed(error.message);
 }
