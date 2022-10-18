@@ -9708,7 +9708,7 @@ async function run(){
             console.log(`Pull Request Branch - ${pullRequestBranch}`);
             console.log(`Token - ${ghToken}`);
             const octokit = github.getOctokit(ghToken)
-            const repository = github.context.repo.repo
+            const repository = github.context.repo
             console.log('repository: ',repository)
             const headCommit = await octokit.rest.git.getCommit({
                 repo: github.context.repo.repo
