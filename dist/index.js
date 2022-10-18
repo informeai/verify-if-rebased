@@ -11034,6 +11034,8 @@ async function run(){
         if(eventName == 'push'){
             const reactive = core.getBooleanInput('reactive');
             console.log('reactive: ',reactive)
+            const ref = github.context.ref
+            console.log('ref: ',ref)
             if(reactive){
                 if(!defaultBranch.length) {
                     core.setFailed('Default Branch invalid')
