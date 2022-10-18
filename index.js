@@ -13,6 +13,7 @@ async function verifyInputs(core,defaultBranch, pullRequestBranch, ghToken){
     if(!ghToken.length) {
         core.setFailed('Token is required')
     }
+    return
 }
 
 async function getHeadCommit(octokit,github,defaultBranch){
