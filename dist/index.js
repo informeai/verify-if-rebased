@@ -11034,7 +11034,7 @@ async function setPrNumberOutput(github,core){
     console.log('Set number pr to output')
     const pr = github.context.payload.pull_request.number
     if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
-    return
+    return pr
 }
 async function run(){
     try {
@@ -11074,9 +11074,9 @@ async function run(){
 
             // const pr = github.context.payload.pull_request.number
             // if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
-            await setPrNumberOutput(github,core)
+            const pr = await setPrNumberOutput(github,core)
             await createLabels(command)
-            await executeVerify(core,command,allCommits,headCommit)
+            await executeVerify(core,command,allCommits,headCommit,pr)
             // console.log('Create labels if not exist')
             // await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
             // await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
