@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const command = require('@actions/exec');
 
-function verifyInputs(core,defaultBranch, pullRequestBranch, ghToken){
+async function verifyInputs(core,defaultBranch, pullRequestBranch, ghToken){
     console.log('Verify inputs')
     if(!defaultBranch.length) {
         core.setFailed('Default Branch invalid')
@@ -13,6 +13,7 @@ function verifyInputs(core,defaultBranch, pullRequestBranch, ghToken){
     if(!ghToken.length) {
         core.setFailed('Token is required')
     }
+    return
 }
 
 async function getHeadCommit(github,defaultBranch){
@@ -38,6 +39,7 @@ async function createLabels(command){
     console.log('Create labels if not exist')
     await command.exec('gh',['label','create','is-rebased','--description="branch actual is rebased with default branch"','--color=0E8A16','-f'])
     await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
+    return
 }
 
 async function executeVerify(core,command,allCommits,headCommit){
@@ -49,12 +51,14 @@ async function executeVerify(core,command,allCommits,headCommit){
         await command.exec('gh',['pr','edit',`${pr}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
         core.setOutput('rebased',false)
     }
+    return
 }
 
-function setPrNumberOutput(github,core){
+async function setPrNumberOutput(github,core){
     console.log('Set number pr to output')
     const pr = github.context.payload.pull_request.number
     if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
+    return
 }
 async function run(){
     try {
@@ -66,7 +70,7 @@ async function run(){
         const octokit = github.getOctokit(ghToken)
         if(eventName == 'pull_request' && !reactive){
             console.log('Single mode active')
-            verifyInputs(core,defaultBranch,pullRequestBranch,ghToken)
+            await verifyInputs(core,defaultBranch,pullRequestBranch,ghToken)
             // if(!defaultBranch.length) {
             //     core.setFailed('Default Branch invalid')
             // }
@@ -94,7 +98,7 @@ async function run(){
 
             // const pr = github.context.payload.pull_request.number
             // if(github.context.payload.pull_request.number) core.setOutput('pr-number',github.context.payload.pull_request.number)
-            setPrNumberOutput(github,core)
+            await setPrNumberOutput(github,core)
             await createLabels(command)
             await executeVerify(core,command,allCommits,headCommit)
             // console.log('Create labels if not exist')
