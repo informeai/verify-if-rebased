@@ -17,6 +17,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: verify if rebased
+        id: verify
         uses: ./
         with:
-          gh-token: ${{ env.GH_TOKEN }} 
+          gh-token: ${{ env.GH_TOKEN }}
+      - name: pr number
+        run: echo ${{ steps.verify.outputs.pr-number}}
+      - name: is rebased
+        run: echo ${{ steps.verify.outputs.rebased}}
