@@ -20,9 +20,5 @@ outputs:
   rebased:
     description: 'return if pr is rebased with default branch - (true/false)'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.default-branch }}
-    - ${{ inputs.pull-request-branch }}
-    - ${{ inputs.gh-token }}
+  using: 'node16'
+  main: 'index.js'
