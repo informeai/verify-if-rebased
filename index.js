@@ -57,7 +57,7 @@ async function run(){
         if(eventName == 'push'){
             const reactive = core.getInput('reactive');
             console.log('reactive: ',reactive)
-            if(reactive){
+            if(reactive == true){
                 if(!defaultBranch.length) {
                     core.setFailed('Default Branch invalid')
                 }
