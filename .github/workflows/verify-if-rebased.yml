@@ -1,0 +1,47 @@
+
+name: verify-if-rebased
+
+on: 
+
+env:
+  GH_TOKEN: ${{ inputs.gh-token }}
+jobs:
+  verify:
+    if: ${{ contains(github.event_name,'pull_request') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.default-branch || github.event.repository.default_branch }}
+      - name: Get last commit default branch
+        id: branch_default
+        run: echo "existed=$(git --no-pager log --max-count 1 --oneline --format="%H" | sed 's/^"\(.*\)"$/\1/')" >> $GITHUB_OUTPUT
+      - name: Echo hash of branch default
+        run: echo ${{ steps.branch_default.outputs.existed }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.pull-request-branch || github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: List logs
+        run: echo $(git log --oneline --format='%H')
+      - name: Get branch ref
+        run: echo ${{ github.event.pull_request.head.ref }}
+      - name: Set if exists in branch actual
+        id: branch_actual
+        run: echo "existed=$( if [[ $(git log --oneline --format="%H" | grep ${{ steps.branch_default.outputs.existed }}) = ${{ steps.branch_default.outputs.existed }} ]]; then echo true;else echo false;fi)" >> $GITHUB_OUTPUT
+      - name: Get if exists
+        run: echo ${{steps.branch_actual.outputs.existed}}
+      - name: Get number of PR
+        run: echo ${{ github.event.pull_request.number}}
+      - name: Create labels if not existed
+        run: |
+          gh label create is-rebased --description "branch actual is rebased with default branch" --color 0E8A16 -f
+          gh label create not-rebased --description "branch actual is not rebased with default branch" --color B60205 -f
+      - name: Set label is-rebased
+        if: ${{ contains(steps.branch_actual.outputs.existed, true) }}
+        run: gh pr edit ${{ github.event.pull_request.number}} --add-label "is-rebased" --remove-label "not-rebased"
+      - name: Set label not-rebased
+        if: ${{ !contains(steps.branch_actual.outputs.existed, true) }}
+        run: gh pr edit ${{ github.event.pull_request.number}} --add-label "not-rebased" --remove-label "is-rebased"

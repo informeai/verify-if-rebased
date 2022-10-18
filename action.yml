@@ -1,0 +1,28 @@
+name: 'Verify if Rebased'
+description: 'Action for verify if rebased PR, and set label (is-rebased or not-rebased)'
+inputs:
+  default-branch:
+    description: 'Default branch of repository'
+    required: false
+    default: ${{ github.event.repository.default_branch }}
+  pull-request-branch:
+    description: 'Branch of pull request'
+    required: false
+    default: ${{ github.event.pull_request.head.ref }}
+  gh-token:
+    description: 'Token with credentials for repository'
+    required: true
+  
+
+outputs:
+  pr-number:
+    description: 'The Number of PR'
+  rebased:
+    description: 'return if pr is rebased with default branch - (true/false)'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.default-branch }}
+    - ${{ inputs.pull-request-branch }}
+    - ${{ inputs.gh-token }}
