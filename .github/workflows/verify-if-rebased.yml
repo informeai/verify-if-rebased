@@ -10,6 +10,8 @@ jobs:
     if: ${{ contains(github.event_name,'pull_request') }}
     runs-on: ubuntu-latest
     steps:
+      - name: List envs
+        run: printenv
       - name: Checkout
         uses: actions/checkout@v3
         with:
