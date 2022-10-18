@@ -41,7 +41,7 @@ async function createLabels(command){
     return
 }
 
-async function executeVerify(core,command,allCommits,headCommit){
+async function executeVerify(core,command,allCommits,headCommit,pr){
     console.log('Execute verify in PR and set label')
     if (allCommits.includes(headCommit)){
         await command.exec('gh',['pr','edit',`${pr}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
