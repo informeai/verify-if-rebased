@@ -11019,9 +11019,13 @@ async function run(){
             await command.exec('gh',['label','create','not-rebased','--description="branch actual is not rebased with default branch"','--color=B60205','-f'])
 
             if (allCommits.includes(headCommit)){
+                //gh pr edit ${{ github.event.pull_request.number}} --add-label "is-rebased" --remove-label "not-rebased"
+                await command.exec('gh',['pr','edit',`${pr}`,'--add-label="is-rebased"','--remove-label="not-rebased"'])
                 core.setOutput('rebased',true)
                 console.log(true)
             }else{
+                //gh pr edit ${{ github.event.pull_request.number}} --add-label "not-rebased" --remove-label "is-rebased"
+                await command.exec('gh',['pr','edit',`${pr}`,'--add-label="not-rebased"','--remove-label="is-rebased"'])
                 core.setOutput('rebased',false)
                 console.log(true)
             }
