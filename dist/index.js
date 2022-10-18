@@ -9688,7 +9688,7 @@ const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
 try {
-    const eventName = core.getInput('event-name');
+    const eventName = github.context.eventName;
     console.log('event: ', eventName)
     if(eventName == 'pull_request'){
         const defaultBranch = core.getInput('default-branch');

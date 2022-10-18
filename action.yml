@@ -11,9 +11,7 @@ inputs:
     default: ${{ github.event.pull_request.head.ref }}
   gh-token:
     description: 'Token with credentials for repository'
-    required: true
-  event-name:
-    default: ${{ github.event_name }}  
+    required: true  
 
 outputs:
   pr-number:

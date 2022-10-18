@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 try {
-    const eventName = core.getInput('event-name');
+    const eventName = github.context.eventName;
     console.log('event: ', eventName)
     if(eventName == 'pull_request'){
         const defaultBranch = core.getInput('default-branch');
