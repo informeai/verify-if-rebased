@@ -1,9 +1,12 @@
 name: test-of-action
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
