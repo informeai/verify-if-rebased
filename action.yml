@@ -12,7 +12,8 @@ inputs:
   gh-token:
     description: 'Token with credentials for repository'
     required: true
-  
+  event-name:
+    default: ${{ github.event_name }}  
 
 outputs:
   pr-number:
