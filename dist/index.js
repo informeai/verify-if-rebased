@@ -9687,34 +9687,40 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
-try {
-    const eventName = github.context.eventName;
-    console.log('event: ', eventName)
-    if(eventName == 'pull_request'){
-        const defaultBranch = core.getInput('default-branch');
-        const pullRequestBranch = core.getInput('pull-request-branch');
-        const ghToken = core.getInput('gh-token');
-        if(!defaultBranch.length) {
-            core.setFailed('Default Branch invalid')
+async function run(){
+    try {
+        const eventName = github.context.eventName;
+        console.log('event: ', eventName)
+        if(eventName == 'pull_request'){
+            const defaultBranch = core.getInput('default-branch');
+            const pullRequestBranch = core.getInput('pull-request-branch');
+            const ghToken = core.getInput('gh-token');
+            if(!defaultBranch.length) {
+                core.setFailed('Default Branch invalid')
+            }
+            if(!pullRequestBranch.length) {
+                core.setFailed('Pull Request Branch invalid')
+            }
+            if(!ghToken.length) {
+                core.setFailed('Token is required')
+            }
+            console.log(`Default Branch - ${defaultBranch}`);
+            console.log(`Pull Request Branch - ${pullRequestBranch}`);
+            console.log(`Token - ${ghToken}`);
+            const octokit = github.getOctokit(ghToken)
+            const headCommit = await octokit.rest.git.getCommit({
+                repo: github.context.repo
+            })
+            console.log('headCommit: ',headCommit)
+            
+    
         }
-        if(!pullRequestBranch.length) {
-            core.setFailed('Pull Request Branch invalid')
-        }
-        if(!ghToken.length) {
-            core.setFailed('Token is required')
-        }
-        console.log(`Default Branch - ${defaultBranch}`);
-        console.log(`Pull Request Branch - ${pullRequestBranch}`);
-        console.log(`Token - ${ghToken}`);
-        const octokit = github.getOctokit(ghToken)
-        const headCommit = octokit.rest.git.getCommit({})
-        console.log('headCommit: ',headCommit)
-        
-
+    } catch (error) {
+      core.setFailed(error.message);
     }
-} catch (error) {
-  core.setFailed(error.message);
 }
+
+run()
 })();
 
 module.exports = __webpack_exports__;
