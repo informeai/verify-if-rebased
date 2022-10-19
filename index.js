@@ -112,7 +112,7 @@ async function run(){
             }
             return
         }else{
-            core.warning('Event of action not accepted')
+            core.warning('Event not accepted without prop reactive and branch default')
             
         }
     } catch (error) {
