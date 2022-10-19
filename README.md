@@ -3,7 +3,7 @@ Action for verify if PR is rebased, and set labels to pr - (is-rebased/not-rebas
 
 ## Usage
 ```
-- uses: informeai/verify-if-rebased
+- uses: informeai/verify-if-rebased@v1
   with:
     # Default branch of repository
     # param default - (github.event.repository.default_branch)
