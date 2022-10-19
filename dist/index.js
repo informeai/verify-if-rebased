@@ -11014,7 +11014,8 @@ async function getPrCommits(octokit,pullRequestBranch){
 
 async function cancelRun(octokit,github){
     const runId = github.context.runId
-    await octokit.request(`GET /repos/{owner}/{repo}/actions/runs/${runId}/cancel`,{
+    console.log('runId: ',runId)
+    await octokit.request(`POST /repos/{owner}/{repo}/actions/runs/${runId}/cancel`,{
         owner: github.context.repo.owner,
         repo: github.context.repo.repo
     })
