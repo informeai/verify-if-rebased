@@ -11107,7 +11107,7 @@ async function run(){
             }
             return
         }else{
-            await cancelRun(octokit,github)
+            // await cancelRun(octokit,github)
             await deleteRun(octokit,github)
             //core.warning('Event of action not accepted')
             
