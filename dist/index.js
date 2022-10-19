@@ -11012,6 +11012,14 @@ async function getPrCommits(octokit,pullRequestBranch){
     return prCommits.data.map((c)=> c.sha)
 }
 
+async function cancelRun(octokit,github){
+    const runId = github.context.runId
+    await octokit.request(`GET /repos/{owner}/{repo}/actions/runs/${runId}/cancel`,{
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo
+    })
+}
+
 async function getAllPrs(octokit,github){
     console.log('Get Prs from repo')
     const resultPRS = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
@@ -11089,7 +11097,9 @@ async function run(){
             }
             return
         }else{
-            core.warning('Event of action not accepted')
+            await cancelRun(octokit,github)
+            //core.warning('Event of action not accepted')
+            
         }
     } catch (error) {
       core.setFailed(error.message);
