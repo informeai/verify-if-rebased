@@ -11021,6 +11021,15 @@ async function cancelRun(octokit,github){
     })
 }
 
+async function deleteRun(octokit,github){
+    const runId = github.context.runId
+    console.log('runId: ',runId)
+    await octokit.request(`DELETE /repos/{owner}/{repo}/actions/runs/${runId}`,{
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo
+    })
+}
+
 async function getAllPrs(octokit,github){
     console.log('Get Prs from repo')
     const resultPRS = await octokit.request(`GET /repos/{owner}/{repo}/pulls`,{
@@ -11099,6 +11108,7 @@ async function run(){
             return
         }else{
             await cancelRun(octokit,github)
+            await deleteRun(octokit,github)
             //core.warning('Event of action not accepted')
             
         }
