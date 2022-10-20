@@ -76,6 +76,7 @@ async function setPrNumberOutput(github,core){
 async function run(){
     try {
         const eventName = github.context.eventName;
+        console.log('eventName: ', eventName)
         const defaultBranch = core.getInput('default-branch');
         const pullRequestBranch = core.getInput('pull-request-branch');
         const ghToken = core.getInput('gh-token');
